@@ -1,0 +1,14 @@
+[
+  {
+    "amount": 30.0,
+    "note": "午餐",
+    "type": "expense",
+    "date": "2026-09-03"
+  },
+  {
+    "amount": 1000.0,
+    "note": "工资",
+    "type": "income",
+    "date": "2026-09-03"
+  }
+]

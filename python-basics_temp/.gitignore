@@ -1,0 +1,19 @@
+# 虚拟环境（几百 MB，绝不提交）
+.venv/
+venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 密钥与环境变量（★API Key 绝不能泄露）
+.env
+*.key
+
+# 数据库文件（练习期可留，真实项目按需）
+*.db
+
+# VS Code / 系统
+.vscode/
+.DS_Store
+Thumbs.db
