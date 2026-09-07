@@ -37,3 +37,11 @@ data = json.loads(raw)     # 失败会抛 JSONDecodeError，企业应用必须�
 print("\n解析后的字段：")
 print("姓名：", data.get("name"))
 print("技能：", data.get("skills"))
+
+"""
+模型原始输出： {"name": "张三", "gender": "男", "birth_date": "1995年6月", "education": [{"degree": "本科", "school": "上海大学", "major": "计算机"}], "work_experience": [{"years": 5, "position": "Python后端开发", "skills": ["FastAPI", "Docker", "MySQL"], "company": "某券商", "responsibilities": "行情数据接口开发", "industry": "金融"}], "skills": ["Python", "FastAPI", "Docker", "MySQL", "RAG", "LangChain"], "recent_projects": "大模型应用"}
+
+解析后的字段：
+姓名： 张三
+技能： ['Python', 'FastAPI', 'Docker', 'MySQL', 'RAG', 'LangChain']
+"""
