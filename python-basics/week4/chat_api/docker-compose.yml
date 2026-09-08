@@ -1,0 +1,12 @@
+# docker-compose.yml（项目根）
+services:
+  chat-api:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./data:/app/data        # 数据库目录挂载出来 → 重建容器数据不丢
+    restart: unless-stopped     # 崩了自动重启（生产必备）

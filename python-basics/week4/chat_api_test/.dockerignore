@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+chat.db        # 数据库不打包进镜像（Day 28 用挂载卷持久化）
+.git/
+.env
