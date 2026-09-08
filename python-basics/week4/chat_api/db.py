@@ -2,6 +2,10 @@
 import sqlite3
 from pathlib import Path
 
+"""db.py 追加：用户"""
+import hashlib, os
+
+
 DB_FILE = Path(__file__).parent / "chat.db"
 
 def get_conn():
@@ -21,6 +25,14 @@ def init_db():
         )
     """)
     conn.execute("CREATE INDEX IF NOT EXISTS idx_session ON messages(session_id)")
+    conn.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id            INTEGER PRIMARY KEY AUTOINCREMENT,
+                username      TEXT UNIQUE NOT NULL,
+                password_hash TEXT NOT NULL,
+                created_at    TEXT DEFAULT (datetime('now'))
+            )
+        """)
     conn.commit()
     conn.close()
 
@@ -51,3 +63,33 @@ def clear_session(session_id):
     conn.execute("DELETE FROM messages WHERE session_id = ?", (session_id,))
     conn.commit()
     conn.close()
+
+
+def hash_password(password: str) -> str:
+    """加盐哈希：同样的密码每次盐不同，防彩虹表"""
+    salt = os.urandom(16).hex()
+    digest = hashlib.sha256((salt + password).encode()).hexdigest()
+    return f"{salt}${digest}"
+
+def verify_password(password: str, stored: str) -> bool:
+    salt, digest = stored.split("$")
+    return hashlib.sha256((salt + password).encode()).hexdigest() == digest
+
+def create_user(username: str, password: str):
+    conn = get_conn()
+    try:
+        conn.execute("INSERT INTO users (username, password_hash) VALUES (?, ?)",
+                     (username, hash_password(password)))
+        conn.commit()
+        return True
+    except sqlite3.IntegrityError:
+        return False            # 用户名重复
+    finally:
+        conn.close()
+
+def get_user(username: str):
+    conn = get_conn()
+    row = conn.execute("SELECT id, username, password_hash FROM users WHERE username = ?",
+                       (username,)).fetchone()
+    conn.close()
+    return dict(row) if row else None
